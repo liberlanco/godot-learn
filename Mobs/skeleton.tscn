@@ -87,7 +87,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"death",
-"speed": 8.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -104,7 +104,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle",
-"speed": 7.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -139,8 +139,6 @@ scale = Vector2(0.613333, 0.613333)
 sprite_frames = SubResource("SpriteFrames_3hurh")
 animation = &"death"
 autoplay = "idle"
-frame = 5
-frame_progress = 1.0
 
 [node name="Detector" type="Area2D" parent="."]
 
