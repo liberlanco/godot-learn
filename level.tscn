@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://d3yn4d2upegf"]
+[gd_scene load_steps=12 format=3 uid="uid://d3yn4d2upegf"]
 
 [ext_resource type="PackedScene" uid="uid://cdmg8sohihmh7" path="res://Player/player.tscn" id="1_5xvlb"]
 [ext_resource type="Texture2D" uid="uid://b3d05n7mm485p" path="res://assets/oak_woods_v1.0/background/background_layer_1.png" id="2_2dhpo"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://b4j3hdqcjg8a" path="res://assets/oak_woods_v1.0/background/background_layer_3.png" id="4_mtudr"]
 [ext_resource type="Texture2D" uid="uid://q6d7v8sfv4xf" path="res://assets/oak_woods_v1.0/oak_woods_tileset.png" id="5_pnv76"]
 [ext_resource type="PackedScene" uid="uid://c05hgjlb5u5ac" path="res://Mobs/skeleton.tscn" id="6_na4ah"]
+[ext_resource type="Script" path="res://Timer.gd" id="7_x6nhc"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wi8t1"]
 texture = ExtResource("5_pnv76")
@@ -1246,6 +1247,26 @@ texture = ExtResource("5_pnv76")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_wi8t1")
 
+[sub_resource type="GDScript" id="GDScript_x7n6f"]
+script/source = "extends Label
+
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	text = \"HP: \" + str($\"../../Player2/Player\".health)
+"
+
+[sub_resource type="GDScript" id="GDScript_0uxbg"]
+script/source = "extends Label
+
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	text = \"Gold: \" + str($\"../../Player2/Player\".gold)
+"
+
 [node name="Level" type="Node2D"]
 
 [node name="BG" type="ParallaxBackground" parent="."]
@@ -1290,3 +1311,37 @@ position = Vector2(430, 526)
 
 [node name="Skeleton" parent="Mobs" instance=ExtResource("6_na4ah")]
 position = Vector2(740, 525)
+
+[node name="Skeleton2" parent="Mobs" instance=ExtResource("6_na4ah")]
+position = Vector2(865, 524)
+
+[node name="Skeleton3" parent="Mobs" instance=ExtResource("6_na4ah")]
+position = Vector2(997, 523)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label - HP" type="Label" parent="CanvasLayer"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 50.0
+offset_bottom = 33.0
+text = "HP"
+script = SubResource("GDScript_x7n6f")
+
+[node name="Label - Gold" type="Label" parent="CanvasLayer"]
+offset_left = 11.0
+offset_top = 39.0
+offset_right = 51.0
+offset_bottom = 62.0
+text = "Gold
+"
+script = SubResource("GDScript_0uxbg")
+
+[node name="Collectables" type="Node2D" parent="."]
+
+[node name="Timer" type="Timer" parent="Collectables"]
+wait_time = 3.169
+autostart = true
+script = ExtResource("7_x6nhc")
+
+[connection signal="timeout" from="Collectables/Timer" to="Collectables/Timer" method="_on_timeout"]
