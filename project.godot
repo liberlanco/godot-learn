@@ -60,6 +60,12 @@ run={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="world"
+2d_physics/layer_2="player"
+2d_physics/layer_3="mobs"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

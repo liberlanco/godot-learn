@@ -61,7 +61,7 @@ func move_state():
 	var direction = Input.get_axis("left", "right")
 	var running = Input.is_action_pressed("run")
 	if direction:
-		velocity.x = direction * SPEED * (1.5 if running else 1)
+		velocity.x = direction * SPEED * (1.5 if running else 1.0)
 		animPlayer.play("run" if running else "walk")
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
@@ -123,3 +123,6 @@ func attack_freeze():
 	await get_tree().create_timer(0.5).timeout
 	print(4)
 	attack_cooldown = false
+	
+func take_hit(damage):
+	print("Took " + str(damage))

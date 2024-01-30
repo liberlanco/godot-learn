@@ -1001,7 +1001,7 @@ _data = {
 polygon = PackedVector2Array(-9, 33, -9, 35, 8, 35, 7, 33)
 
 [node name="Player" type="CharacterBody2D"]
-position = Vector2(59, 56)
+collision_layer = 2
 script = ExtResource("1_xqs27")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -1034,5 +1034,6 @@ position = Vector2(0, -20)
 energy = 0.51
 texture = ExtResource("5_5snxt")
 
-[node name="LightOccluder2D" type="LightOccluder2D" parent="PointLight2D"]
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+position = Vector2(0, -20)
 occluder = SubResource("OccluderPolygon2D_kg2tu")

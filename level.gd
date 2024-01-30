@@ -9,9 +9,9 @@ enum {
 
 var time_of_day = DAY
 var day_count = 1
-@onready var sun_light = $DirectionalLight2D
-@onready var point_light_1 = $PointLight2D2
-@onready var point_light_2 = $PointLight2D3
+@onready var sun_light = $Light/DirectionalLight2D
+@onready var point_light_1 = $Light/PointLight2D2
+@onready var point_light_2 = $Light/PointLight2D3
 @onready var day_text = $CanvasLayer/DayText
 @onready var canvas_player = $CanvasLayer/AnimationPlayer
 
