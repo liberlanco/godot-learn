@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+signal test
 
 enum {
 	IDLE,
@@ -24,6 +25,7 @@ var gold = 0
 var state = MOVE
 var combo = false
 var attack_cooldown = false
+var player_pos
 
 func _physics_process(delta):
 	
@@ -54,7 +56,11 @@ func _physics_process(delta):
 		await animPlayer.animation_finished
 		queue_free()
 		get_tree().change_scene_to_file("res://menu.tscn")
+
 	move_and_slide()
+	
+	player_pos = self.position
+	Signals.emit_signal("player_position_update", player_pos)
 
 
 func move_state():
@@ -94,9 +100,7 @@ func attack_state():
 		state = ATTACK2
 	velocity.x = 0
 	animPlayer.play("attack")
-	print(1)
 	await animPlayer.animation_finished
-	print(2)
 	attack_freeze()
 	state = MOVE
 	
@@ -118,10 +122,8 @@ func attack3_state():
 	state = MOVE
 
 func attack_freeze():
-	print(3)
 	attack_cooldown = true
 	await get_tree().create_timer(0.5).timeout
-	print(4)
 	attack_cooldown = false
 	
 func take_hit(damage):
