@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://ct1tfreesxhvd"]
+[gd_scene load_steps=47 format=3 uid="uid://ct1tfreesxhvd"]
 
 [ext_resource type="Texture2D" uid="uid://dppidpicq1lpd" path="res://assets/Monsters_Creatures_Fantasy/Mushroom/Attack.png" id="1_8ptla"]
 [ext_resource type="Script" path="res://Mobs/mashroom.gd" id="1_nkedt"]
@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://d1g0aqdcyp7ew" path="res://assets/Monsters_Creatures_Fantasy/Mushroom/Take Hit.png" id="3_pqurv"]
 [ext_resource type="Texture2D" uid="uid://b0sjr2o7d1t7n" path="res://assets/Monsters_Creatures_Fantasy/Mushroom/Idle.png" id="4_bmxsp"]
 [ext_resource type="Texture2D" uid="uid://l564w3pow86o" path="res://assets/Monsters_Creatures_Fantasy/Mushroom/Run.png" id="5_5nuqe"]
+[ext_resource type="PackedScene" uid="uid://bqvjagpv3n7pa" path="res://scenes/damage_box.tscn" id="7_ivaj1"]
+[ext_resource type="Script" path="res://scripts/hit_box_area.gd" id="8_5d4k1"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_irwaa"]
 radius = 11.0
@@ -261,6 +263,18 @@ tracks/1/keys = {
 "update": 1,
 "values": ["attack"]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("AttackDirection/DamageBox/HitBox/CollisionShape2D:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
 
 [sub_resource type="Animation" id="Animation_ma4cw"]
 length = 0.8
@@ -372,8 +386,12 @@ tracks/1/keys = {
 "values": ["run"]
 }
 
+[sub_resource type="Animation" id="Animation_ni6ly"]
+length = 0.001
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_he45d"]
 _data = {
+"RESET": SubResource("Animation_ni6ly"),
 "attack": SubResource("Animation_iewkr"),
 "death": SubResource("Animation_ma4cw"),
 "hit": SubResource("Animation_7ylqw"),
@@ -412,4 +430,26 @@ collision_mask = 2
 position = Vector2(20, 3.75)
 shape = SubResource("RectangleShape2D_rerdd")
 
+[node name="DamageBox" parent="AttackDirection" instance=ExtResource("7_ivaj1")]
+
+[node name="HurtBox" parent="AttackDirection/DamageBox" index="0" node_paths=PackedStringArray("target_object")]
+collision_layer = 32
+collision_mask = 0
+script = ExtResource("8_5d4k1")
+target_object = NodePath("../../..")
+
+[node name="CollisionShape2D" parent="AttackDirection/DamageBox/HurtBox" index="0"]
+position = Vector2(0, 3)
+
+[node name="HitBox" parent="AttackDirection/DamageBox" index="1"]
+position = Vector2(0, 1)
+collision_layer = 0
+collision_mask = 16
+
+[node name="CollisionShape2D" parent="AttackDirection/DamageBox/HitBox" index="0"]
+position = Vector2(16, 1)
+
 [connection signal="body_entered" from="AttackDirection/AttackRange" to="." method="_on_attack_range_body_entered"]
+[connection signal="area_entered" from="AttackDirection/DamageBox/HitBox" to="." method="_on_hit_box_area_entered"]
+
+[editable path="AttackDirection/DamageBox"]

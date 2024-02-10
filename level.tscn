@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://d3yn4d2upegf"]
+[gd_scene load_steps=22 format=3 uid="uid://d3yn4d2upegf"]
 
 [ext_resource type="PackedScene" uid="uid://cdmg8sohihmh7" path="res://Player/player.tscn" id="1_5xvlb"]
 [ext_resource type="Script" path="res://level.gd" id="1_c2ya7"]
@@ -12,6 +12,9 @@
 [ext_resource type="PackedScene" uid="uid://cs740t6xayyw8" path="res://Mobs/goblin.tscn" id="9_1ael7"]
 [ext_resource type="Texture2D" uid="uid://d3gk8e116u4ji" path="res://assets/circle.png" id="9_xqbo1"]
 [ext_resource type="PackedScene" uid="uid://c05hgjlb5u5ac" path="res://Mobs/skeleton.tscn" id="10_orxno"]
+[ext_resource type="Texture2D" uid="uid://dwin3hmevekkx" path="res://assets/Sprite-0003.png" id="13_gbuym"]
+[ext_resource type="Texture2D" uid="uid://cxohkidbef8kq" path="res://assets/Sprite-0001.png" id="14_tln84"]
+[ext_resource type="Texture2D" uid="uid://bqnarxr3x85qv" path="res://assets/Sprite-0002.png" id="15_iajm2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wi8t1"]
 texture = ExtResource("5_pnv76")
@@ -1376,14 +1379,14 @@ position = Vector2(57, 524)
 
 [node name="Mobs" type="Node2D" parent="."]
 
-[node name="Mashroom" parent="Mobs" instance=ExtResource("8_2sryb")]
-position = Vector2(-72, 509)
-
 [node name="Goblin" parent="Mobs" instance=ExtResource("9_1ael7")]
 position = Vector2(-161, 512)
 
 [node name="Skeleton" parent="Mobs" instance=ExtResource("10_orxno")]
-position = Vector2(1, 520)
+position = Vector2(-19, 528)
+
+[node name="Mashroom" parent="Mobs" instance=ExtResource("8_2sryb")]
+position = Vector2(-79, 524)
 
 [node name="Collectables" type="Node2D" parent="."]
 position = Vector2(0, -4)
@@ -1412,5 +1415,18 @@ libraries = {
 "": SubResource("AnimationLibrary_bj3r2")
 }
 
+[node name="HPProgressBar" type="TextureProgressBar" parent="CanvasLayer"]
+offset_left = 33.0
+offset_top = 27.0
+offset_right = 139.0
+offset_bottom = 54.0
+nine_patch_stretch = true
+texture_under = ExtResource("13_gbuym")
+texture_over = ExtResource("14_tln84")
+texture_progress = ExtResource("15_iajm2")
+tint_over = Color(0.490196, 0.490196, 0.219608, 1)
+tint_progress = Color(0.858824, 0.0862745, 0.0862745, 1)
+
 [connection signal="timeout" from="Light/DirectionalLight2D/DayNight" to="." method="_on_day_night_timeout"]
+[connection signal="health_changed" from="Player/Player" to="." method="_on_player_health_changed"]
 [connection signal="timeout" from="Collectables/Timer" to="Collectables/Timer" method="_on_timeout"]

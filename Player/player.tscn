@@ -1,10 +1,12 @@
-[gd_scene load_steps=102 format=3 uid="uid://cdmg8sohihmh7"]
+[gd_scene load_steps=104 format=3 uid="uid://cdmg8sohihmh7"]
 
 [ext_resource type="Texture2D" uid="uid://dlseoudsriax7" path="res://assets/oak_woods_v1.0/character/char_blue.png" id="1_5tgda"]
 [ext_resource type="Script" path="res://Player/player.gd" id="1_xqs27"]
 [ext_resource type="Texture2D" uid="uid://dxjs03jnfmfl5" path="res://assets/charactert/char_blue_1.png" id="2_v3j25"]
 [ext_resource type="Texture2D" uid="uid://w2gec0ltl76c" path="res://assets/charactert/char_blue_2.png" id="3_pt7vn"]
 [ext_resource type="Texture2D" uid="uid://d3gk8e116u4ji" path="res://assets/circle.png" id="5_5snxt"]
+[ext_resource type="PackedScene" uid="uid://bqvjagpv3n7pa" path="res://scenes/damage_box.tscn" id="6_wl1td"]
+[ext_resource type="Script" path="res://scripts/hit_box_area.gd" id="7_6f1fh"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cgyv2"]
 radius = 11.0
@@ -1010,9 +1012,8 @@ shape = SubResource("CapsuleShape2D_cgyv2")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -13)
 sprite_frames = SubResource("SpriteFrames_bc7m1")
-animation = &"attack 2"
+animation = &"idle"
 autoplay = "idle"
-frame = 2
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2.4, 2.4)
@@ -1037,3 +1038,21 @@ texture = ExtResource("5_5snxt")
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]
 position = Vector2(0, -20)
 occluder = SubResource("OccluderPolygon2D_kg2tu")
+
+[node name="AttackDirection" type="Node2D" parent="."]
+
+[node name="DamageBox" parent="AttackDirection" instance=ExtResource("6_wl1td")]
+
+[node name="HurtBox" parent="AttackDirection/DamageBox" index="0" node_paths=PackedStringArray("target_object")]
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("7_6f1fh")
+target_object = NodePath("../../..")
+
+[node name="HitBox" parent="AttackDirection/DamageBox" index="1"]
+collision_mask = 32
+
+[node name="CollisionShape2D" parent="AttackDirection/DamageBox/HitBox" index="0"]
+position = Vector2(16, 0)
+
+[editable path="AttackDirection/DamageBox"]

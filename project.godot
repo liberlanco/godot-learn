@@ -33,6 +33,10 @@ version_control/autoload_on_startup=true
 
 enabled=PackedStringArray("res://addons/AS2P/plugin.cfg", "res://addons/godot_state_charts/plugin.cfg")
 
+[filesystem]
+
+import/blender/enabled=false
+
 [input]
 
 left={
@@ -69,6 +73,7 @@ run={
 2d_physics/layer_1="world"
 2d_physics/layer_2="player"
 2d_physics/layer_3="mobs"
+2d_physics/layer_5="player h"
 
 [rendering]
 

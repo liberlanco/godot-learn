@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqvjagpv3n7pa"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_08yfr"]
+radius = 9.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xte5b"]
+radius = 7.0
+
+[node name="DamageBox" type="Node2D"]
+
+[node name="HurtBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("CircleShape2D_08yfr")
+debug_color = Color(0.156863, 0.627451, 0.439216, 0.419608)
+
+[node name="HitBox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+position = Vector2(21, 0)
+shape = SubResource("CircleShape2D_xte5b")
+disabled = true
+debug_color = Color(0.74902, 0.368627, 0.713726, 0.419608)

@@ -6,7 +6,7 @@ enum {
 	CHASE
 }
 
-var damage = 50
+var damage = 20
 var player_position
 var direction
 
@@ -77,3 +77,9 @@ func chase_physics_process():
 
 func _on_player_position_update(player_pos):
 	self.player_position = player_pos
+
+
+func _on_hit_box_area_entered(area):
+	var body = area.target_object
+	if body.has_method("take_hit"):
+		body.take_hit(damage)
