@@ -9,12 +9,14 @@ enum {
 	BLOCK,
 	SLIDE,
 	DAMAGE,
-	DEATH
+	DEATH,
+	RECOVERY
 }
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var damage_combo_mod = 1
+var no_run = false
 
 @onready var animated_sprite_2d = $AnimatedSprite2D
 @onready var animation_player = $AnimationPlayer
@@ -40,6 +42,8 @@ var state = MOVE:
 				damage_state()
 			DEATH:
 				death_state()
+			RECOVERY:
+				recovery_state()
 
 var combo = false
 var attack_cooldown = false
@@ -58,23 +62,24 @@ func _physics_process(delta):
 	
 	match state:
 		MOVE:
-			move_state_physics_process()
+			move_state_physics_process(delta)
 		BLOCK:
-			block_state_physics_process()
+			block_state_physics_process(delta)
 		ATTACK:
-			attack_state_physics_process()
+			attack_state_physics_process(delta)
 		ATTACK2:
-			attack2_state_physics_process()
+			attack2_state_physics_process(delta)
 
 	move_and_slide()
 	PlayerManager.position = position
 
 func move_state():
 	pass
-
-func move_state_physics_process():
+	
+func move_state_physics_process(delta):
 	var direction = Input.get_axis("left", "right")
-	var running = Input.is_action_pressed("run")
+	var running = Input.is_action_pressed("run") and pre_run(delta)
+
 	if direction:
 		velocity.x = direction * PlayerManager.speed * (1.5 if running else 1.0)
 		animation_player.play("run" if running else "walk")
@@ -90,16 +95,25 @@ func move_state_physics_process():
 		attack_direction.scale = Vector2(1, 1)
 		
 	if Input.is_action_pressed("block") and state != SLIDE:
-		state = BLOCK if velocity.x == 0 else SLIDE
+		if abs(velocity.x) < 0.1:
+			state = BLOCK
+		elif spend_action_stamina(SLIDE):
+			state = SLIDE
 		
-	if Input.is_action_just_pressed("attack") and not attack_cooldown:
+	if Input.is_action_just_pressed("attack") and pre_attack(ATTACK):
 		state = ATTACK
+
+	if PlayerManager.stamina < 100 and not running:
+		var recovery = PlayerManager.recovery_speed * delta
+		if velocity.x == 0:
+			recovery *= 2
+		PlayerManager.stamina += recovery
 
 func block_state():
 	velocity.x = 0
 	animation_player.play("block")
 		
-func block_state_physics_process():
+func block_state_physics_process(delta):
 	if Input.is_action_just_released("block"):
 		state = MOVE
 
@@ -109,36 +123,31 @@ func slide_state():
 	state = MOVE
 	
 func attack_state():
+	animation_player.play("attack")
 	velocity.x = 0
 	damage_combo_mod = 1
-	animation_player.play("attack")
 	await animation_player.animation_finished
 	if state == ATTACK:
 		attack_freeze()
 	state = MOVE
 	
-func attack_state_physics_process():
-	if Input.is_action_just_pressed("attack") and combo == true:
+func attack_state_physics_process(delta):
+	if Input.is_action_just_pressed("attack") and pre_attack(ATTACK2, true):
 		state = ATTACK2
 	
-func combo1():
-	combo = true
-	await animation_player.animation_finished
-	combo = false
-	
 func attack2_state():
-	damage_combo_mod = 1.2
 	animation_player.play("attack 2")
+	damage_combo_mod = 1.2
 	await animation_player.animation_finished
 	state = MOVE
 	
-func attack2_state_physics_process():
-	if Input.is_action_just_pressed("attack") and combo == true:
+func attack2_state_physics_process(delta):
+	if Input.is_action_just_pressed("attack") and pre_attack(ATTACK3, true):
 		state = ATTACK3
 	
 func attack3_state():
-	damage_combo_mod = 2
 	animation_player.play("attack 3")
+	damage_combo_mod = 2
 	await animation_player.animation_finished
 	state = MOVE
 
@@ -160,12 +169,48 @@ func death_state():
 	queue_free()
 	get_tree().change_scene_to_file("res://menu.tscn")
 
+func recovery_state():
+	velocity.x = 0
+	animation_player.play("recovery")
+	await animation_player.animation_finished
+	PlayerManager.stamina += PlayerManager.recovery_speed * 3
+	state = MOVE
+
+func combo1():
+	combo = true
+	await animation_player.animation_finished
+	combo = false
+	
+func pre_attack(next_attack_phase, in_combo = false):
+	if in_combo && !combo:
+		return false
+	if attack_cooldown:
+		return false
+	if not spend_action_stamina(next_attack_phase):
+		return false
+	return true
+
+func pre_run(delta):
+	if no_run and PlayerManager.stamina < 30:
+		return false
+	if PlayerManager.stamina < 2:
+		no_run = true
+		return false
+	else:
+		no_run = false
+	spend_stamina(PlayerManager.run_stamina_cost * delta)
+	return true
+
 func take_hit(damage):
+	var stamina_reducement = 0
 	if state == BLOCK:
-		damage /= 4
+		stamina_reducement = damage / PlayerManager.block_stamina_cost_div
+		damage = damage / 4
 	elif state == SLIDE:
 		return
 	PlayerManager.health -= damage
+	if stamina_reducement > 0:
+		PlayerManager.stamina -= stamina_reducement
 
 func _on_hit_box_area_entered(area):
 	var body = area.target_object
@@ -180,4 +225,24 @@ func _on_player_no_health():
 	state = DEATH
 
 func _on_player_no_stamina():
-	state = IDLE
+	state = RECOVERY
+
+
+func spend_action_stamina(action):
+	match action:
+		ATTACK:
+			return spend_stamina(PlayerManager.attack_stamina_cost)
+		ATTACK2:
+			return spend_stamina(PlayerManager.attack_stamina_cost)
+		ATTACK3:
+			return spend_stamina(PlayerManager.attack_stamina_cost)
+		SLIDE:
+			return spend_stamina(PlayerManager.slide_stamina_cost)
+
+func spend_stamina(amount):
+	if PlayerManager.stamina < amount:
+		return false
+	else:
+		PlayerManager.stamina -= amount
+		return true
+		

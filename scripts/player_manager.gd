@@ -15,6 +15,10 @@ var position:
 
 var speed = 150.0
 var jump_velocity = -400.0
+var attack_stamina_cost = 10
+var block_stamina_cost_div = 1
+var slide_stamina_cost = 20
+var run_stamina_cost = 5
 
 var max_health = 100
 var health = 100:
@@ -27,6 +31,7 @@ var health = 100:
 			hp_updated.emit(health)
 
 var max_stamina = 100
+var recovery_speed = 10
 var stamina = 100:
 	set(value):
 		stamina = max(0, min(value, max_stamina))
@@ -41,4 +46,5 @@ var damage = 0:
 		return base_damage
 
 var gold = 0
+
 

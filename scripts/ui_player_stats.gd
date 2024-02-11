@@ -5,7 +5,7 @@ extends CanvasLayer
 
 func _ready():
 	PlayerManager.connect("hp_updated", Callable(self, "_on_player_hp_updated"))
-	PlayerManager.connect("stamin_updated", Callable(self, "_on_player_stamin_updated"))
+	PlayerManager.connect("stamina_updated", Callable(self, "_on_player_stamina_updated"))
 	
 	_on_player_hp_updated(PlayerManager.health)
 	_on_player_stamina_updated(PlayerManager.stamina)

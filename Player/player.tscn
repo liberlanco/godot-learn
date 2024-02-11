@@ -1,4 +1,4 @@
-[gd_scene load_steps=104 format=3 uid="uid://cdmg8sohihmh7"]
+[gd_scene load_steps=108 format=3 uid="uid://cdmg8sohihmh7"]
 
 [ext_resource type="Texture2D" uid="uid://dlseoudsriax7" path="res://assets/oak_woods_v1.0/character/char_blue.png" id="1_5tgda"]
 [ext_resource type="Script" path="res://Player/player.gd" id="1_xqs27"]
@@ -222,6 +222,18 @@ region = Rect2(336, 168, 56, 56)
 [sub_resource type="AtlasTexture" id="AtlasTexture_vavue"]
 atlas = ExtResource("1_5tgda")
 region = Rect2(392, 168, 56, 56)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g4cfl"]
+atlas = ExtResource("2_v3j25")
+region = Rect2(0, 0, 56, 56)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vnraa"]
+atlas = ExtResource("2_v3j25")
+region = Rect2(336, 224, 56, 56)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jhny8"]
+atlas = ExtResource("2_v3j25")
+region = Rect2(392, 224, 56, 56)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8tj02"]
 atlas = ExtResource("1_5tgda")
@@ -531,6 +543,20 @@ animations = [{
 }],
 "loop": false,
 "name": &"jump",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g4cfl")
+}, {
+"duration": 3.0,
+"texture": SubResource("AtlasTexture_vnraa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jhny8")
+}],
+"loop": false,
+"name": &"recovery",
 "speed": 10.0
 }, {
 "frames": [{
@@ -996,6 +1022,33 @@ tracks/1/keys = {
 "values": ["jump"]
 }
 
+[sub_resource type="Animation" id="Animation_puh8c"]
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": ["recovery"]
+}
+
 [sub_resource type="Animation" id="Animation_oycty"]
 length = 0.8
 loop_mode = 1
@@ -1090,6 +1143,7 @@ _data = {
 "fall": SubResource("Animation_0fmyh"),
 "idle": SubResource("Animation_anjuw"),
 "jump": SubResource("Animation_37pq3"),
+"recovery": SubResource("Animation_puh8c"),
 "run": SubResource("Animation_oycty"),
 "slide": SubResource("Animation_idlu8"),
 "walk": SubResource("Animation_2fjkt")
@@ -1112,6 +1166,11 @@ animation = &"attack 3"
 autoplay = "idle"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_fn03r")
+}
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_fn03r")
 }
