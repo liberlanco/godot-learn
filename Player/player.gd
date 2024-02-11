@@ -13,14 +13,17 @@ enum {
 	RECOVERY
 }
 
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var damage_combo_mod = 1
 var no_run = false
 
+@onready var state_chart = $StateChart
 @onready var animated_sprite_2d = $AnimatedSprite2D
 @onready var animation_player = $AnimationPlayer
 @onready var attack_direction = $AttackDirection
+
 
 var state = MOVE:
 	set(value):
@@ -71,8 +74,14 @@ func _physics_process(delta):
 			attack2_state_physics_process(delta)
 
 	move_and_slide()
-	PlayerManager.position = position
 
+	if state in [MOVE, RECOVERY] and velocity.x == 0:
+		state_chart.send_event("idle")
+	else:
+		state_chart.send_event("not idle")
+
+	PlayerManager.position = position
+	
 func move_state():
 	pass
 	
@@ -217,8 +226,8 @@ func _on_hit_box_area_entered(area):
 	if body.has_method("take_hit"):
 		body.take_hit(PlayerManager.damage * damage_combo_mod)
 
-func _on_player_hp_updated(hp):
-	if state != BLOCK:
+func _on_player_hp_updated(hp, diff):
+	if state != BLOCK and diff < 0:
 		state = DAMAGE
 
 func _on_player_no_health():
@@ -245,4 +254,8 @@ func spend_stamina(amount):
 	else:
 		PlayerManager.stamina -= amount
 		return true
-		
+
+func _on_regen_active_state_physics_processing(delta):
+	PlayerManager.health += 10 * delta 
+	
+	

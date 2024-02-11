@@ -1,10 +1,10 @@
 extends Node
 
 signal no_health()
-signal hp_updated(hp)
+signal hp_updated(hp, diff)
 
 signal no_stamina()
-signal stamina_updated(stamina)
+signal stamina_updated(stamina, diff)
 
 signal position_updated(position)
 
@@ -23,22 +23,29 @@ var run_stamina_cost = 5
 var max_health = 100
 var health = 100:
 	set(value):
-		health = max(0, min(value, max_health))
-		print(health)
+		var new_health = max(0, min(value, max_health))
+		if health == new_health: return
+
+		var diff = new_health - health
+		health = new_health
 		if health <= 0:
 			no_health.emit()
 		else:
-			hp_updated.emit(health)
+			hp_updated.emit(health, diff)
 
 var max_stamina = 100
 var recovery_speed = 10
 var stamina = 100:
 	set(value):
-		stamina = max(0, min(value, max_stamina))
+		var new_stamina = max(0, min(value, max_stamina))
+		if stamina == new_stamina: return
+		
+		var diff = value - stamina
+		stamina = new_stamina
 		if stamina <= 0:
 			no_stamina.emit()
 		else:
-			stamina_updated.emit(stamina)
+			stamina_updated.emit(stamina, diff)
 
 var base_damage = 10
 var damage = 0:

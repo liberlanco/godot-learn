@@ -16,12 +16,14 @@ var day_count = 1
 @onready var canvas_player = $CanvasLayer/AnimationPlayer
 @onready var player = $Player/Player
 @onready var daytime_animation_player = $Light/DaytimeAnimationPlayer
+@onready var state_chart_debugger = $CanvasLayer/StateChartDebugger
 
 const HP_OK_COLOR = Color("16db27")
 const HP_BAD_COLOR = Color("db1616")
 
 func _ready():
 	exec_time_of_day()
+
 	#hp_progress_bar.max_value = player.max_health
 	#hp_progress_bar.value = player.health
 	#hp_progress_bar.tint_progress = HP_OK_COLOR

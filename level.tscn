@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://d3yn4d2upegf"]
+[gd_scene load_steps=30 format=3 uid="uid://d3yn4d2upegf"]
 
 [ext_resource type="PackedScene" uid="uid://cdmg8sohihmh7" path="res://Player/player.tscn" id="1_5xvlb"]
 [ext_resource type="Script" path="res://level.gd" id="1_c2ya7"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://d3gk8e116u4ji" path="res://assets/circle.png" id="9_xqbo1"]
 [ext_resource type="PackedScene" uid="uid://c05hgjlb5u5ac" path="res://Mobs/skeleton.tscn" id="10_orxno"]
 [ext_resource type="PackedScene" uid="uid://3ccbyx07ci4g" path="res://scenes/ui_player_stats.tscn" id="13_fvrgi"]
+[ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="13_onlty"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wi8t1"]
 texture = ExtResource("5_pnv76")
@@ -1787,6 +1788,13 @@ theme_override_constants/shadow_offset_y = 4
 theme_override_font_sizes/font_size = 54
 text = "Day
 "
+
+[node name="StateChartDebugger" parent="CanvasLayer" instance=ExtResource("13_onlty")]
+offset_left = 811.0
+offset_top = 29.0
+offset_right = -41.0
+offset_bottom = -284.0
+initial_node_to_watch = NodePath("../../Player/Player")
 
 [node name="PlayerStats" parent="." instance=ExtResource("13_fvrgi")]
 
