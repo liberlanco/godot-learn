@@ -14,7 +14,6 @@ var day_count = 1
 @onready var point_light_2 = $Light/PointLight2D3
 @onready var day_text = $CanvasLayer/DayText
 @onready var canvas_player = $CanvasLayer/AnimationPlayer
-@onready var hp_progress_bar = $CanvasLayer/HPProgressBar
 @onready var player = $Player/Player
 @onready var daytime_animation_player = $Light/DaytimeAnimationPlayer
 
@@ -23,9 +22,9 @@ const HP_BAD_COLOR = Color("db1616")
 
 func _ready():
 	exec_time_of_day()
-	hp_progress_bar.max_value = player.max_health
-	hp_progress_bar.value = player.health
-	hp_progress_bar.tint_progress = HP_OK_COLOR
+	#hp_progress_bar.max_value = player.max_health
+	#hp_progress_bar.value = player.health
+	#hp_progress_bar.tint_progress = HP_OK_COLOR
 
 func _on_day_night_timeout():
 	transit_time_of_day()
@@ -53,12 +52,12 @@ func exec_time_of_day():
 
 
 
-func _on_player_health_changed(hp):
-	if not hp_progress_bar:
-		return	
-		
-	hp_progress_bar.value = hp
-
-	var amount = 1 - hp_progress_bar.value / hp_progress_bar.max_value
-	hp_progress_bar.tint_progress = HP_OK_COLOR.lerp(HP_BAD_COLOR, amount)	
+#func _on_player_health_changed(hp):
+	#if not hp_progress_bar:
+		#return	
+		#
+	#hp_progress_bar.value = hp
+#
+	#var amount = 1 - hp_progress_bar.value / hp_progress_bar.max_value
+	#hp_progress_bar.tint_progress = HP_OK_COLOR.lerp(HP_BAD_COLOR, amount)	
 

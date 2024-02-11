@@ -25,8 +25,6 @@ var state: int = 0:
 		state = value
 		_on_state_update(value)
 
-func _ready():
-	Signals.connect("player_position_update", Callable(self, "_on_player_position_update"))
 
 func _physics_process(delta):
 	if not is_on_floor():
@@ -96,16 +94,13 @@ func take_hit(damage):
 	mob_health.take_hit(damage)
 
 func chase_physics_process():
-	direction = (player_position -  self.position).normalized()
+	direction = (PlayerManager.position -  self.position).normalized()
 	if direction.x < 0:
 		animated_sprite_2d.flip_h = true
 		attack_direction.scale = Vector2(-1, 1)
 	elif direction.x > 0:
 		animated_sprite_2d.flip_h = false
 		attack_direction.scale = Vector2(1, 1)
-
-func _on_player_position_update(player_pos):
-	self.player_position = player_pos
 
 func _on_hit_box_area_entered(area):
 	var body = area.target_object

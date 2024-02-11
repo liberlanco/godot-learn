@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://d3yn4d2upegf"]
+[gd_scene load_steps=29 format=3 uid="uid://d3yn4d2upegf"]
 
 [ext_resource type="PackedScene" uid="uid://cdmg8sohihmh7" path="res://Player/player.tscn" id="1_5xvlb"]
 [ext_resource type="Script" path="res://level.gd" id="1_c2ya7"]
@@ -12,9 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://cs740t6xayyw8" path="res://Mobs/goblin.tscn" id="9_1ael7"]
 [ext_resource type="Texture2D" uid="uid://d3gk8e116u4ji" path="res://assets/circle.png" id="9_xqbo1"]
 [ext_resource type="PackedScene" uid="uid://c05hgjlb5u5ac" path="res://Mobs/skeleton.tscn" id="10_orxno"]
-[ext_resource type="Texture2D" uid="uid://dwin3hmevekkx" path="res://assets/Sprite-0003.png" id="13_gbuym"]
-[ext_resource type="Texture2D" uid="uid://cxohkidbef8kq" path="res://assets/Sprite-0001.png" id="14_tln84"]
-[ext_resource type="Texture2D" uid="uid://bqnarxr3x85qv" path="res://assets/Sprite-0002.png" id="15_iajm2"]
+[ext_resource type="PackedScene" uid="uid://3ccbyx07ci4g" path="res://scenes/ui_player_stats.tscn" id="13_fvrgi"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wi8t1"]
 texture = ExtResource("5_pnv76")
@@ -1334,44 +1332,119 @@ _data = {
 "RESET": SubResource("Animation_36000")
 }
 
-[sub_resource type="Animation" id="Animation_o41qf"]
-resource_name = "night"
-length = 5.0
+[sub_resource type="Animation" id="Animation_kl8yv"]
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("DirectionalLight2D:energy")
+tracks/0/path = NodePath("LeftTorch:energy")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 5),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [0.65, 0.17]
+"values": [0.0]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("LeftTorch:energy")
+tracks/1/path = NodePath("RightTorch:energy")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [1.0]
+"values": [0.0]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("RightTorch:energy")
+tracks/2/path = NodePath("DirectionalLight2D:energy")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [1.0]
+"values": [0.07]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("../CanvasLayer/DayText:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("../CanvasLayer/DayText:self_modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("DirectionalLight2D:color")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.478431, 0.513726, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_oy057"]
+resource_name = "day"
+length = 5.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LeftTorch:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RightTorch:energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("DirectionalLight2D:energy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.7, 1.0]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -1383,7 +1456,59 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0, 5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 0.796078, 0.764706, 1), Color(0.478431, 0.513726, 1, 1)]
+"values": [Color(0.819608, 0.87451, 1, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_l1xgh"]
+resource_name = "evening"
+length = 5.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("LeftTorch:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(3.3, 3.4, 3.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 1.32, 1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RightTorch:energy")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(3.3, 3.4, 3.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 1.32, 1.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("DirectionalLight2D:energy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 0.65]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("DirectionalLight2D:color")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 0.796078, 0.764706, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_x5o88"]
@@ -1462,44 +1587,44 @@ tracks/5/keys = {
 "values": [Color(0.478431, 0.513726, 1, 1), Color(0.819608, 0.87451, 1, 1)]
 }
 
-[sub_resource type="Animation" id="Animation_l1xgh"]
-resource_name = "evening"
+[sub_resource type="Animation" id="Animation_o41qf"]
+resource_name = "night"
 length = 5.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("LeftTorch:energy")
+tracks/0/path = NodePath("DirectionalLight2D:energy")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(3.3, 3.4, 3.5),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [0.0, 1.32, 1.0]
+"values": [0.65, 0.17]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("RightTorch:energy")
+tracks/1/path = NodePath("LeftTorch:energy")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(3.3, 3.4, 3.5),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [0.0, 1.32, 1.0]
+"values": [1.0]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("DirectionalLight2D:energy")
+tracks/2/path = NodePath("RightTorch:energy")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 5),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [1.0, 0.65]
+"values": [1.0]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -1511,134 +1636,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0, 5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 0.796078, 0.764706, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_oy057"]
-resource_name = "day"
-length = 5.0
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("LeftTorch:energy")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("RightTorch:energy")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("DirectionalLight2D:energy")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0.7, 1.0]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("DirectionalLight2D:color")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(0.819608, 0.87451, 1, 1), Color(1, 1, 1, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_kl8yv"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("LeftTorch:energy")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("RightTorch:energy")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("DirectionalLight2D:energy")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.07]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("../CanvasLayer/DayText:visible")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("../CanvasLayer/DayText:self_modulate")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 0)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("DirectionalLight2D:color")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(0.478431, 0.513726, 1, 1)]
+"values": [Color(1, 0.796078, 0.764706, 1), Color(0.478431, 0.513726, 1, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_sj4m8"]
@@ -1790,18 +1788,7 @@ theme_override_font_sizes/font_size = 54
 text = "Day
 "
 
-[node name="HPProgressBar" type="TextureProgressBar" parent="CanvasLayer"]
-offset_left = 33.0
-offset_top = 27.0
-offset_right = 139.0
-offset_bottom = 54.0
-nine_patch_stretch = true
-texture_under = ExtResource("13_gbuym")
-texture_over = ExtResource("14_tln84")
-texture_progress = ExtResource("15_iajm2")
-tint_over = Color(0.490196, 0.490196, 0.219608, 1)
-tint_progress = Color(0.858824, 0.0862745, 0.0862745, 1)
+[node name="PlayerStats" parent="." instance=ExtResource("13_fvrgi")]
 
 [connection signal="timeout" from="Light/DayNight" to="." method="_on_day_night_timeout"]
-[connection signal="health_changed" from="Player/Player" to="." method="_on_player_health_changed"]
 [connection signal="timeout" from="Collectables/Timer" to="Collectables/Timer" method="_on_timeout"]

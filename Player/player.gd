@@ -1,7 +1,5 @@
 extends CharacterBody2D
 
-signal health_changed(hp)
-
 enum {
 	IDLE,
 	MOVE,
@@ -14,31 +12,14 @@ enum {
 	DEATH
 }
 
-const SPEED = 150.0
-const JUMP_VELOCITY = -400.0
-
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-
-@onready var anim = $AnimatedSprite2D
-@onready var animPlayer = $AnimationPlayer
-@onready var attack_direction = $AttackDirection
-
-var max_health = 100
-var base_damage = 10
 var damage_combo_mod = 1
 
-var health = 0:
-	set(value):
-		health = value
-		if health < 0:
-			health = 0
-		health_changed.emit(health)
-var damage = 0:
-	get: 
-		return base_damage * damage_combo_mod
+@onready var animated_sprite_2d = $AnimatedSprite2D
+@onready var animation_player = $AnimationPlayer
+@onready var attack_direction = $AttackDirection
 
-var gold = 0
 var state = MOVE:
 	set(value):
 		state = value
@@ -62,18 +43,18 @@ var state = MOVE:
 
 var combo = false
 var attack_cooldown = false
-var player_pos
-
 
 func _ready():
-	health = max_health
+	PlayerManager.connect("hp_updated", Callable(self, "_on_player_hp_updated"))
+	PlayerManager.connect("no_health", Callable(self, "_on_player_no_health"))
+	PlayerManager.connect("no_stamina", Callable(self, "_on_player_no_stamina"))
 
 func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
 #
 	#if velocity.y > 0:
-		#animPlayer.play("fall")
+		#animation_player.play("fall")
 	
 	match state:
 		MOVE:
@@ -84,13 +65,9 @@ func _physics_process(delta):
 			attack_state_physics_process()
 		ATTACK2:
 			attack2_state_physics_process()
-		
 
 	move_and_slide()
-	
-	player_pos = self.position
-	Signals.emit_signal("player_position_update", player_pos)
-
+	PlayerManager.position = position
 
 func move_state():
 	pass
@@ -99,17 +76,17 @@ func move_state_physics_process():
 	var direction = Input.get_axis("left", "right")
 	var running = Input.is_action_pressed("run")
 	if direction:
-		velocity.x = direction * SPEED * (1.5 if running else 1.0)
-		animPlayer.play("run" if running else "walk")
+		velocity.x = direction * PlayerManager.speed * (1.5 if running else 1.0)
+		animation_player.play("run" if running else "walk")
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		animPlayer.play("idle")	
+		velocity.x = move_toward(velocity.x, 0, PlayerManager.speed)
+		animation_player.play("idle")	
 
 	if direction == -1:
-		anim.flip_h = true
+		animated_sprite_2d.flip_h = true
 		attack_direction.scale = Vector2(-1, 1)
 	elif direction == 1:
-		anim.flip_h = false
+		animated_sprite_2d.flip_h = false
 		attack_direction.scale = Vector2(1, 1)
 		
 	if Input.is_action_pressed("block") and state != SLIDE:
@@ -120,49 +97,49 @@ func move_state_physics_process():
 
 func block_state():
 	velocity.x = 0
-	animPlayer.play("block")
+	animation_player.play("block")
 		
 func block_state_physics_process():
 	if Input.is_action_just_released("block"):
 		state = MOVE
 
 func slide_state():
-	animPlayer.play("slide")
-	await animPlayer.animation_finished
+	animation_player.play("slide")
+	await animation_player.animation_finished
 	state = MOVE
 	
 func attack_state():
 	velocity.x = 0
 	damage_combo_mod = 1
-	animPlayer.play("attack")
-	await animPlayer.animation_finished
+	animation_player.play("attack")
+	await animation_player.animation_finished
 	if state == ATTACK:
 		attack_freeze()
 	state = MOVE
 	
 func attack_state_physics_process():
 	if Input.is_action_just_pressed("attack") and combo == true:
-		state = ATTACK2	
+		state = ATTACK2
 	
 func combo1():
 	combo = true
-	await animPlayer.animation_finished
+	await animation_player.animation_finished
 	combo = false
 	
 func attack2_state():
 	damage_combo_mod = 1.2
-	animPlayer.play("attack 2")
-	await animPlayer.animation_finished
+	animation_player.play("attack 2")
+	await animation_player.animation_finished
 	state = MOVE
 	
 func attack2_state_physics_process():
 	if Input.is_action_just_pressed("attack") and combo == true:
-		state = ATTACK3	
+		state = ATTACK3
 	
 func attack3_state():
 	damage_combo_mod = 2
-	animPlayer.play("attack 3")
-	await animPlayer.animation_finished
+	animation_player.play("attack 3")
+	await animation_player.animation_finished
 	state = MOVE
 
 func attack_freeze():
@@ -172,31 +149,35 @@ func attack_freeze():
 	
 func damage_state():
 	velocity.x = 0
-	animPlayer.play("damage")
-	await animPlayer.animation_finished
+	animation_player.play("damage")
+	await animation_player.animation_finished
 	state = MOVE
 	
 func death_state():
 	velocity.x = 0
-	animPlayer.play("death")
-	await animPlayer.animation_finished
+	animation_player.play("death")
+	await animation_player.animation_finished
 	queue_free()
-	#get_tree().change_scene_to_file("res://menu.tscn")
+	get_tree().change_scene_to_file("res://menu.tscn")
 
 func take_hit(damage):
 	if state == BLOCK:
 		damage /= 4
 	elif state == SLIDE:
 		return
-	else:
-		state = DAMAGE
-		
-	health -= damage
-	if health <= 0:
-		state = DEATH
-
+	PlayerManager.health -= damage
 
 func _on_hit_box_area_entered(area):
 	var body = area.target_object
 	if body.has_method("take_hit"):
-		body.take_hit(damage)
+		body.take_hit(PlayerManager.damage * damage_combo_mod)
+
+func _on_player_hp_updated(hp):
+	if state != BLOCK:
+		state = DAMAGE
+
+func _on_player_no_health():
+	state = DEATH
+
+func _on_player_no_stamina():
+	state = IDLE
