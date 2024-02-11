@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://ct1tfreesxhvd"]
+[gd_scene load_steps=53 format=3 uid="uid://ct1tfreesxhvd"]
 
 [ext_resource type="Texture2D" uid="uid://dppidpicq1lpd" path="res://assets/Monsters_Creatures_Fantasy/Mushroom/Attack.png" id="1_8ptla"]
 [ext_resource type="Script" path="res://Mobs/mashroom.gd" id="1_nkedt"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://l564w3pow86o" path="res://assets/Monsters_Creatures_Fantasy/Mushroom/Run.png" id="5_5nuqe"]
 [ext_resource type="PackedScene" uid="uid://bqvjagpv3n7pa" path="res://scenes/damage_box.tscn" id="7_ivaj1"]
 [ext_resource type="Script" path="res://scripts/hit_box_area.gd" id="8_5d4k1"]
+[ext_resource type="PackedScene" uid="uid://cyo1x2mbbpaov" path="res://scenes/mob_health.tscn" id="9_fv8lj"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_irwaa"]
 radius = 8.0
@@ -674,7 +675,13 @@ collision_mask = 16
 [node name="CollisionShape2D" parent="AttackDirection/DamageBox/HitBox" index="0"]
 position = Vector2(16, 1)
 
+[node name="MobHealth" parent="." instance=ExtResource("9_fv8lj")]
+position = Vector2(0, -24.95)
+scale = Vector2(0.145, 0.145)
+
 [connection signal="body_entered" from="AttackDirection/AttackRange" to="." method="_on_attack_range_body_entered"]
 [connection signal="area_entered" from="AttackDirection/DamageBox/HitBox" to="." method="_on_hit_box_area_entered"]
+[connection signal="damaged" from="MobHealth" to="." method="_on_mob_health_damaged"]
+[connection signal="no_health" from="MobHealth" to="." method="_on_mob_health_no_health"]
 
 [editable path="AttackDirection/DamageBox"]

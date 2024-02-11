@@ -11,8 +11,7 @@ enum {
 	BLOCK,
 	SLIDE,
 	DAMAGE,
-	DEATH,
-	NULL
+	DEATH
 }
 
 const SPEED = 150.0
@@ -167,7 +166,6 @@ func attack3_state():
 	state = MOVE
 
 func attack_freeze():
-	print("freeze")
 	attack_cooldown = true
 	await get_tree().create_timer(0.5).timeout
 	attack_cooldown = false
