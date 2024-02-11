@@ -3,10 +3,14 @@ extends CharacterBody2D
 enum {
 	IDLE,
 	ATTACK,
-	CHASE
+	CHASE,
+	RECOVER,
+	DAMAGE,
+	DEATH
 }
 
 var damage = 20
+var health = 120
 var player_position
 var direction
 
@@ -43,6 +47,7 @@ func _on_attack_range_body_entered(body):
 		#body.take_hit(damage)
 
 func _on_state_update(value):
+	print(value)
 	match state:
 		IDLE:
 			idle_state()
@@ -50,21 +55,51 @@ func _on_state_update(value):
 			attack_state()
 		CHASE:
 			chase_state()
+		DEATH:
+			death_state()
+		DAMAGE:
+			damage_state()
+		RECOVER:
+			recover_state()
 	
 func idle_state():
 	animation_player.play("idle")
-	await get_tree().create_timer(1).timeout
-	attack_collision_shape_2d.disabled = false
+
 	state = CHASE
+
+func recover_state():
+	animation_player.play("recover")
+	await animation_player.animation_finished
+	state = IDLE
 	
 func attack_state():
 	animation_player.play("attack")
 	await animation_player.animation_finished
-	attack_collision_shape_2d.disabled = true
-	state = IDLE
+	state = RECOVER
 
 func chase_state():
 	pass
+	
+func death_state():
+	velocity.x = 0
+	animation_player.play("death")
+	await animation_player.animation_finished
+	queue_free()
+	
+func damage_state():
+	velocity.x = 0
+	animation_player.stop()
+	animation_player.play("hit")
+	await animation_player.animation_finished
+	state = IDLE
+	
+func take_hit(damage):
+	health -= damage
+	if health <= 0:
+		health = 0
+		state = DEATH
+	else:
+		state = DAMAGE
 
 func chase_physics_process():
 	direction = (player_position -  self.position).normalized()
